@@ -1,0 +1,86 @@
+/* You can add global styles to this file, and also import other style files */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+html,
+body {
+    height: 100%;
+
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.titlecountry {
+    color: rgb(36, 33, 33);
+    font-size: large;
+}
+
+.formRg {
+    border-radius: 2%;
+}
+
+.divForm {
+    display: flex;
+    justify-content: center;
+    margin-left: 5%;
+    margin-bottom: 5%;
+    width: 90%;
+    height: 90%;
+    padding: 15px;
+    box-shadow: 0 0 1em rgb(167, 165, 165);
+
+}
+.img-head{
+    width: 110%;
+    margin-left: -10px;
+    margin-right: -10px;
+    object-fit: cover;
+}
+.divPosts{
+    display: flex;
+    justify-content: center;
+}
+.posts{
+    width: 90%;
+}
+.span{
+    color: rgb(197, 30, 108);
+}
+.divFooter{
+    position: relative;
+    bottom: 0;
+    height: 50px;
+    margin-left: -10px;
+    margin-right: -10px;
+    width: 110%;
+    background-color: rgb(219, 40, 124);
+    color: white;
+    text-align: center;
+    line-height: 100px;
+}
+.btnRegistrar:root {
+    --color-button-color: white;
+    --color-button-background-color: black;
+    background-color: rgb(218, 55, 131);
+  }
+  .center {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+}
+.div-centralized{
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+}
+.divider{
+    margin-top: 40px;
+}

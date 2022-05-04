@@ -1,0 +1,15 @@
+{
+  "config":{
+    "name":"TgatasMix",
+    "menu": {
+      "HeaderTitle":"TGatasMix",
+      "HeaderDescription":"Anuncie conosco"
+    }
+  },
+  "page":{
+    "city":{
+      "name":"São Paulo"
+    }
+  }
+}
+  

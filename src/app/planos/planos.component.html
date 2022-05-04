@@ -1,0 +1,31 @@
+
+<div class="my-4">
+    <po-button p-label="Adicionar Plano" (p-click)="modal.open()"> </po-button>
+</div>
+<po-table   
+    [p-items]="planos"
+    [p-columns]="columns"
+    [p-actions]="actions"
+> </po-table>
+
+<po-modal #modal p-title="Adicionar Plano">
+    
+<form [formGroup]="formPlano">
+    <div class="po-row">
+      <po-input class="po-sm-12 po-md-12 po-lg-12" name="name" formControlName="name"
+      p-clean p-label="Nome do plano" p-required> </po-input>
+      <po-input class="po-sm-12 po-md-12 po-lg-12" name="type" formControlName="type" p-clean p-label="Tipo" p-required> </po-input>
+      <po-input class="po-sm-12 po-md-12 po-lg-12" name="valor" formControlName="valor" p-clean p-label="Valor" p-required> </po-input>
+      <po-textarea class="po-sm-12" name="descricao" p-clean formControlName="descricao" p-label="Descrição"></po-textarea>
+    </div> 
+</form>
+
+    <po-modal-footer [p-disabled-align]="false">
+        <po-button class="po-sm-12" p-type="primary" p-label="Salvar" (p-click)="savePlano()"> </po-button>
+    </po-modal-footer>
+
+</po-modal>
+    
+  
+    
+  

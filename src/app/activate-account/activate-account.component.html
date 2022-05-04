@@ -1,0 +1,37 @@
+<po-table
+  [p-auto-collapse]="true"
+  [p-columns]="columns"
+  [p-hide-columns-manager]="true"
+  [p-items]="anunciantes"
+  [p-sort]="true"
+  [p-actions]="actions"
+  >
+</po-table>
+
+<!-- 
+<po-table   
+[p-items]="anunciantes"
+[p-columns]="columns"
+[p-actions]="actions"
+[p-striped]="true"
+[p-sort]="true"
+
+> </po-table>
+<ng-template
+p-table-row-template
+let-rowItem
+let-i="rowIndex"
+><po-widget p-title="Transport detail {{ rowItem.code }}">
+    <div class="po-row">
+      <po-select
+        class="po-md-6"
+        name="status"
+        p-label="Transport status"
+        [p-options]="statusOptions"
+      >
+      </po-select>
+    </div>
+
+  </po-widget>
+</ng-template>
+ -->

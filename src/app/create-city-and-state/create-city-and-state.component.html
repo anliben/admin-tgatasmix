@@ -1,0 +1,51 @@
+<div class="my-4">
+    <po-button p-label="Adicionar Estado" (p-click)="adcEstados.open()"> </po-button>
+</div>
+<po-table
+  [p-auto-collapse]="true"
+  [p-columns]="columnsEstados"
+  [p-actions]="actions"
+  [p-hide-columns-manager]="true"
+  [p-items]="estados"
+  [p-sort]="true"
+  [p-striped]="true"
+>
+</po-table>
+
+<!-- Modal de Adicionar Cidades -->
+<po-modal #modal p-click-out="true" p-size="sm" p-title="Cidades">
+    <po-input class="po-sm-12" [(ngModel)]="nameCity" p-label="Nome da Cidade"></po-input>
+    <po-button class="po-sm-12" (p-click)="insertOneCity()" p-type="primary" p-label="Salvar"> </po-button>
+    <div class="po-sm-12">
+        <po-table
+            [p-auto-collapse]="true"
+            [p-columns]="columnsCidades"
+            [p-actions]="actionsTableCidades"
+            [p-hide-columns-manager]="true"
+            [p-items]="cidades"
+            >
+        </po-table>
+    </div>
+    <po-modal-footer [p-disabled-align]="false"> </po-modal-footer>
+</po-modal>
+
+<!-- Modal de Adicionar Estados -->
+<po-modal
+    #adcEstados
+    p-click-out="true"
+    p-size="sm"
+    p-title="Adicionar Estados">
+
+    <form [formGroup]="formEstados">
+
+        <po-input p-label="Nome do Estado"name="name" formControlName="name" p-clean></po-input>
+        <po-button class="po-sm-12 po-mt-2" p-type="primary" p-label="Salvar" (p-click)="saveEstado()"> </po-button>
+
+        <po-modal-footer [p-disabled-align]="false">
+        </po-modal-footer>
+    </form>
+
+</po-modal>
+
+
+
