@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PoNotificationService, PoTableAction, PoTableColumn } from '@po-ui/ng-components';
-
-import { Service } from '../shared/service/service';
+import { FirebaseService } from '../service/firebase.service';
 
 
 @Component({
@@ -14,11 +14,14 @@ export class PlanosComponent implements OnInit {
 
   formPlano!: FormGroup;
   planos: any[]=[];
+  
+  anunciantes: any[] = [];
+
+  cidade?: string;
 
   readonly columns: Array<PoTableColumn> = [
     { property: 'id', label: 'Name', visible: false},
-    { property: 'name', label: 'Name' },
-    { property: 'type', label: 'Tipo' },
+    { property: 'nome', label: 'Name' },
     { property: 'descricao', label: 'Descrição'},
     { property: 'valor', label: 'Valor' },
   ];
@@ -28,41 +31,38 @@ export class PlanosComponent implements OnInit {
   ];
 
   constructor(
-    private service: Service,
     private formBuilder: FormBuilder,
     private poNotify: PoNotificationService,
+    private db: AngularFirestore,
+    private fire:FirebaseService
     ) { }
 
   ngOnInit(): void {
-    this.service.getPlanos().subscribe((res:any) => {
-      this.planos = res
+    
+    this.fire.getAll('planos').snapshotChanges().forEach(snap => {
+      snap.forEach(doc => {
+        const data = doc.payload.doc.data() as object;
+        const id = doc.payload.doc.id;
+        this.planos.push({id:id, ...data });
+      });
     });
+    console.log(this.planos)
     this.creatFormPlanos()
   }
 
   creatFormPlanos(){
     this.formPlano = this.formBuilder.group({
-      name: ['', Validators.required],
-      type: ['', Validators.required],
+      nome: ['', Validators.required],
       descricao: ['', Validators.required],
       valor: ['', Validators.required]
     })
   }
 
   savePlano(){
-    const { name, type, descricao, valor } = this.formPlano.value;
-
     if(this.formPlano.invalid){
       this.poNotify.error('Preencha os campos corretamente!');
     }else{
-      this.service.setPlanos({
-        name: name,
-        type: type,
-        descricao: descricao,
-        valor: valor
-      }).subscribe((res: any) => {
-        console.log(res)
-      });
+      this.db.collection('planos').add({...this.formPlano.value});
       this.poNotify.success('Plano Adicionado com sucesso!');
       setTimeout(() => {
         location.reload();
@@ -71,18 +71,13 @@ export class PlanosComponent implements OnInit {
   }
 
   deletarPlano(plano:any){
-
-    const { name } = plano;
-    console.log(name)
-
-    this.service.deletePlanos({name: name}).subscribe((res) => {
-      this.poNotify.success('Plano Excluido com sucesso');
+    console.log(plano.id);
+    this.poNotify.success('Plano Deletado com sucesso!');
+    this.fire.deletePlanos(plano.id);          
       setTimeout(() => {
         location.reload();
       }, 1750);
-    })
   }
-
 
 }
 

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { PoSelectOption, PoTableAction, PoTableColumn } from '@po-ui/ng-components';
-import { Service } from '../shared/service/service';
+import { PoNotificationService, PoTableAction, PoTableColumn } from '@po-ui/ng-components';
+import { FirebaseService } from '../service/firebase.service';
 
 @Component({
   selector: 'app-activate-account',
@@ -17,7 +17,7 @@ export class ActivateAccountComponent implements OnInit {
 
   readonly columns: Array<PoTableColumn> = [
     {
-      property: 'activated',
+      property: 'verified',
       label: 'Status',
       type: 'label',
       width: '8%',
@@ -27,29 +27,35 @@ export class ActivateAccountComponent implements OnInit {
       ]
     },
     { property: 'id', label: 'ID', visible: false},
-      { property: 'name', label: 'Nome' },
-      { property: 'email', label: 'Email' },
+      { property: 'nome', label: 'Nome' },
+      { property: 'user', label: 'Email' },
       { property: 'idade', label: 'Idade' },
-      { property: 'city', label: 'Cidade' },
+      { property: 'cidade', label: 'Cidade' },
 
   ];
-  constructor(private activateService: Service) {}
+  constructor(
+    private fire:FirebaseService,
+    private poNotify: PoNotificationService,
+
+    ) {}
 
   ngOnInit() {
-    this.getItems();
+    this.fire.getAll('anunciantes').snapshotChanges().forEach(snap => {
+      snap.forEach(doc => {
+        const data = doc.payload.doc.data() as object;
+        const id = doc.payload.doc.id;
+        this.anunciantes.push({id:id, ...data });
+      });
+    });
+    
+    console.log(this.anunciantes)  
   }
 
-  getItems(){
-     this.activateService.getAnunciantes().subscribe((res:any) => {
-      this.anunciantes = res;
-    });
-  }
   ativarConta(anunciante:any){
-    anunciante.activated = true.toString();
-    this.activateService
-      .updateAnunciante(anunciante)
-      .subscribe((res: any) => {
-        console.log('Ativado com sucesso!');
-    })
-   }
+    console.log(this.anunciantes);
+    anunciante.verified = true.toString();
+    this.fire.update(anunciante);
+    setTimeout(() => {
+      location.reload();
+    }, 400);  }
 }

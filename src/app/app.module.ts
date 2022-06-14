@@ -13,12 +13,17 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AuthGuard } from './guards/auth-guards.service';
 import { PoStepperModule } from '@po-ui/ng-components';
 import { PlanosComponent } from './planos/planos.component';
 import { ActivateAccountComponent } from './activate-account/activate-account.component';
 import { CreateCityAndStateComponent } from './create-city-and-state/create-city-and-state.component';
 import { PoModalModule } from '@po-ui/ng-components';
+import { environment } from 'src/environments/environment';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
+import { AngularFirestoreCollectionGroup, AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -29,10 +34,11 @@ export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
     AppComponent,
     PlanosComponent,
     ActivateAccountComponent,
-    CreateCityAndStateComponent
+    CreateCityAndStateComponent,
 
   ],
   imports: [
+    
     BrowserModule,
     AppRoutingModule,
     PoModule,
@@ -56,9 +62,14 @@ export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
     BrowserAnimationsModule,
     PoStepperModule,
     PoModalModule,
-    PoTableModule
+    PoTableModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFireAuthModule,
+    AngularFirestoreModule,
+    AngularFireStorageModule,
+    AngularFireDatabaseModule,
   ],
-  providers: [AuthGuard, PoStorageService],
+  providers: [ PoStorageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

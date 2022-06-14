@@ -1,14 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import {
   PoModalComponent,
   PoNotificationService,
   PoTableAction,
   PoTableColumn,
 } from '@po-ui/ng-components';
-
-import { Service } from '../shared/service/service';
+import { FirebaseService } from '../service/firebase.service';
+import{ map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create-city-and-state',
@@ -17,18 +17,19 @@ import { Service } from '../shared/service/service';
 })
 export class CreateCityAndStateComponent implements OnInit {
   @ViewChild(PoModalComponent) modal!: PoModalComponent;
-  estados: [] = [];
+  estados: any[] = [];
   cidades: any[] = [];
+
   formEstados!: FormGroup;
   nameCity!: string;
   nameState!: string;
 
   readonly columnsEstados: Array<PoTableColumn> = [
-    { property: 'name', label: 'Nomes Estados' },
+    { property: 'nome', label: 'Nomes Estados' },
   ];
 
   readonly columnsCidades: Array<PoTableColumn> = [
-    { property: 'name', label: 'Nomes Cidades' },
+    { property: 'nome', label: 'Nomes Cidades' },
   ];
 
   readonly actions: Array<PoTableAction> = [
@@ -53,82 +54,80 @@ export class CreateCityAndStateComponent implements OnInit {
   ];
 
   constructor(
-    private service: Service,
     private formBuilder: FormBuilder,
     private poNotify: PoNotificationService,
-    private route: Router
+    private fire:FirebaseService,
+    private db: AngularFirestore,
+
   ) {}
 
   ngOnInit(): void {
-    this.service.getEstados().subscribe((res: any) => {
-      this.estados = res;
+    this.fire.getAll('pais').snapshotChanges().forEach(snap => {
+      snap.forEach(doc => {
+        const data = doc.payload.doc.data() as object;
+        const id = doc.payload.doc.id;
+        this.estados.push({id:id, ...data });
+      });
     });
-    this.creatFormEstados();
+    console.log(this.estados)
+    this.creatFormEstados(); 
   }
 
   adicionarCidades(item: any) {
-    const { name } = item;
-    this.service.getOneEstados({ name: name }).subscribe((res: any) => {
-      this.cidades = res.cidades;
-      this.nameState = name;
-      this.modal.open();
-    });
+    this.fire.getWhere('estados', 'estado', '==', item.nome).snapshotChanges().pipe(
+      map(change => 
+        change.map (c => 
+          ({id: c.payload.doc.id, ...c.payload.doc.data() as object})
+              )
+            )
+          ).subscribe(data =>{ 
+            this.cidades = data;
+            this.nameState = (item.nome);
+            this.modal.open();
+          });
+      console.log(this.cidades);
   }
 
   creatFormEstados() {
     this.formEstados = this.formBuilder.group({
-      name: ['', Validators.required],
+      nome: ['', Validators.required],
       cidades: [[]],
     });
   }
 
   saveEstado() {
-    const { name, cidades } = this.formEstados.value;
-
     if (this.formEstados.invalid) {
       this.poNotify.error('Preencha os campos corretamente!');
     } else {
-      this.service
-        .setEstados({
-          name: name,
-        })
-        .subscribe((res: any) => {
-          this.poNotify.success('Estado Adicionado com sucesso!');
-        });
-      location.reload();
+      this.db.collection('pais').add({...this.formEstados.value});
+      this.poNotify.success('Estado Adicionado com sucesso!');
+      setTimeout(() => {
+        location.reload();
+      }, 1750);
     }
   }
 
   deletarEstado(estado: any) {
-    const { name } = estado;
-    this.service
-      .deleteEstados({
-        name: name,
-      })
-      .subscribe((res) => {
-        this.poNotify.success('Estado Excluido com sucesso!');
-        setTimeout(() => {
-          location.reload();
-        }, 1750);
-      });
+    console.log(estado);
+    this.fire.deleteEstado(estado.id);          
+    setTimeout(() => {
+      this.poNotify.success('Estado Excluido com sucesso!');
+      location.reload();
+    }, 1750);
   }
 
   insertOneCity() {
-    this.service
-      .inserOneCidades({ nameState: this.nameState, nameCity: this.nameCity })
-      .subscribe((res: any) => {});
+    console.log(  this.nameCity, this.nameState);
+    
+    this.db.collection('estados').add({
+      estado: this.nameState,
+      nome: this.nameCity
+    });
   }
 
   deletarCidade(cidade: any) {
-    const { name } = cidade;
-    this.service
-      .deleteCidades({
-        nameState: this.nameState,
-        nameCity: name,
-      })
-      .subscribe((res) => {
-        this.poNotify.success('Cidade Excluida com sucesso!');
-        location.reload();
-      });
+    console.log(cidade.id);
+    this.fire.deleteCidade(cidade.id);          
+    this.poNotify.success('Cidade Excluido com sucesso!');
   }
 }

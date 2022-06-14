@@ -15,7 +15,7 @@
 <!-- Modal de Adicionar Cidades -->
 <po-modal #modal p-click-out="true" p-size="sm" p-title="Cidades">
     <po-input class="po-sm-12" [(ngModel)]="nameCity" p-label="Nome da Cidade"></po-input>
-    <po-button class="po-sm-12" (p-click)="insertOneCity()" p-type="primary" p-label="Salvar"> </po-button>
+    <po-button class="po-sm-12" (p-click)="insertOneCity()" p-type="primary" p-label="Adicionar Cidade"> </po-button>
     <div class="po-sm-12">
         <po-table
             [p-auto-collapse]="true"
@@ -38,7 +38,7 @@
 
     <form [formGroup]="formEstados">
 
-        <po-input p-label="Nome do Estado"name="name" formControlName="name" p-clean></po-input>
+        <po-input p-label="Nome do Estado"name="name" formControlName="nome" p-clean></po-input>
         <po-button class="po-sm-12 po-mt-2" p-type="primary" p-label="Salvar" (p-click)="saveEstado()"> </po-button>
 
         <po-modal-footer [p-disabled-align]="false">
