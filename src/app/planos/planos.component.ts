@@ -22,8 +22,10 @@ export class PlanosComponent implements OnInit {
   readonly columns: Array<PoTableColumn> = [
     { property: 'id', label: 'Name', visible: false},
     { property: 'nome', label: 'Name' },
+    { property: 'ganhos', label: 'Ganhos',  },
     { property: 'descricao', label: 'Descrição'},
     { property: 'valor', label: 'Valor' },
+    { property: 'link', label: 'Link para paramento'}
   ];
 
   actions: Array<PoTableAction> = [

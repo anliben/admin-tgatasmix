@@ -1,0 +1,9 @@
+h2 { 
+    text-align: center;
+    color: rgb(65, 65, 65);
+    margin-top: 10px;
+}
+.center{
+    display: flex;
+    justify-content: center;
+}

@@ -13,8 +13,13 @@
 </po-table>
 
 <!-- Modal de Adicionar Cidades -->
-<po-modal #modal p-click-out="true" p-size="sm" p-title="Cidades">
+<po-modal #modal p-click-out="true" p-size="sm" p-title="Cidades ">
+    <po-input class="po-sm-12" [(ngModel)]="nameState" p-disabled="true" p-label="Nome do Estado"></po-input>
     <po-input class="po-sm-12" [(ngModel)]="nameCity" p-label="Nome da Cidade"></po-input>
+    <po-textarea class="po-sm-12" p-label="Descrição"name="descricao" [(ngModel)]="descricaoCity" p-clean></po-textarea>
+    <h2 class="po-font-text-bold">Adicionar Imagem</h2>
+    <po-upload class="center po-mb-4" name="upload"  p-url="https://po-sample-api.herokuapp.com/v1/uploads/addFile">
+    </po-upload>
     <po-button class="po-sm-12" (p-click)="insertOneCity()" p-type="primary" p-label="Adicionar Cidade"> </po-button>
     <div class="po-sm-12">
         <po-table
@@ -39,6 +44,10 @@
     <form [formGroup]="formEstados">
 
         <po-input p-label="Nome do Estado"name="name" formControlName="nome" p-clean></po-input>
+        <po-textarea p-label="Descrição"name="descricao" formControlName="descricao" p-clean></po-textarea>
+        <h2 class="po-font-text-bold">Adicionar Imagem</h2>
+        <po-upload class="center po-mb-4" name="upload" formControlName="foto" p-url="https://po-sample-api.herokuapp.com/v1/uploads/addFile">
+        </po-upload>
         <po-button class="po-sm-12 po-mt-2" p-type="primary" p-label="Salvar" (p-click)="saveEstado()"> </po-button>
 
         <po-modal-footer [p-disabled-align]="false">

@@ -21,8 +21,10 @@ export class CreateCityAndStateComponent implements OnInit {
   cidades: any[] = [];
 
   formEstados!: FormGroup;
+
   nameCity!: string;
   nameState!: string;
+  descricaoCity!: string;
 
   readonly columnsEstados: Array<PoTableColumn> = [
     { property: 'nome', label: 'Nomes Estados' },
@@ -91,7 +93,8 @@ export class CreateCityAndStateComponent implements OnInit {
   creatFormEstados() {
     this.formEstados = this.formBuilder.group({
       nome: ['', Validators.required],
-      cidades: [[]],
+      descricao: ['', Validators.required],
+      foto: ['', Validators.required],
     });
   }
 
@@ -121,7 +124,8 @@ export class CreateCityAndStateComponent implements OnInit {
     
     this.db.collection('estados').add({
       estado: this.nameState,
-      nome: this.nameCity
+      nome: this.nameCity,
+      descricao: this.descricaoCity,
     });
   }
 
