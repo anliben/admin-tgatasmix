@@ -7,7 +7,6 @@ import { PoStorageModule, PoStorageService } from '@po-ui/ng-storage';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PoTemplatesModule } from '@po-ui/ng-templates';
-import { StarRatingModule } from '@sreyaj/ng-star-rating';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
@@ -38,7 +37,6 @@ export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
 
   ],
   imports: [
-    
     BrowserModule,
     AppRoutingModule,
     PoModule,
@@ -50,7 +48,6 @@ export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
     BrowserAnimationsModule,
     PoFieldModule,
     FormsModule,
-    StarRatingModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

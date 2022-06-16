@@ -14,7 +14,7 @@ export class PlanosComponent implements OnInit {
 
   formPlano!: FormGroup;
   planos: any[]=[];
-  
+
   anunciantes: any[] = [];
 
   cidade?: string;
@@ -40,7 +40,7 @@ export class PlanosComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
-    
+
     this.fire.getAll('planos').snapshotChanges().forEach(snap => {
       snap.forEach(doc => {
         const data = doc.payload.doc.data() as object;
@@ -56,15 +56,25 @@ export class PlanosComponent implements OnInit {
     this.formPlano = this.formBuilder.group({
       nome: ['', Validators.required],
       descricao: ['', Validators.required],
-      valor: ['', Validators.required]
+      valor: ['', Validators.required],
+      ganho: ['', Validators.required],
+      link: ['', Validators.required],
     })
   }
 
   savePlano(){
-    if(this.formPlano.invalid){
+    const { nome, descricao, valor, ganho, link } = this.formPlano.value;
+    let ganhos = ganho.split(',')
+  if(this.formPlano.invalid){
       this.poNotify.error('Preencha os campos corretamente!');
     }else{
-      this.db.collection('planos').add({...this.formPlano.value});
+      this.db.collection('planos').add({
+        nome,
+        descricao,
+        valor,
+        ganho: ganhos,
+        link
+      });
       this.poNotify.success('Plano Adicionado com sucesso!');
       setTimeout(() => {
         location.reload();
@@ -75,7 +85,7 @@ export class PlanosComponent implements OnInit {
   deletarPlano(plano:any){
     console.log(plano.id);
     this.poNotify.success('Plano Deletado com sucesso!');
-    this.fire.deletePlanos(plano.id);          
+    this.fire.deletePlanos(plano.id);
       setTimeout(() => {
         location.reload();
       }, 1750);

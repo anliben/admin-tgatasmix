@@ -8,7 +8,7 @@ import {
   PoTableColumn,
 } from '@po-ui/ng-components';
 import { FirebaseService } from '../service/firebase.service';
-import{ map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create-city-and-state',
@@ -23,6 +23,7 @@ export class CreateCityAndStateComponent implements OnInit {
   formEstados!: FormGroup;
 
   nameCity!: string;
+  fotoCity!: string;
   nameState!: string;
   descricaoCity!: string;
 
@@ -58,36 +59,47 @@ export class CreateCityAndStateComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private poNotify: PoNotificationService,
-    private fire:FirebaseService,
-    private db: AngularFirestore,
-
+    private fire: FirebaseService,
+    private db: AngularFirestore
   ) {}
 
   ngOnInit(): void {
-    this.fire.getAll('pais').snapshotChanges().forEach(snap => {
-      snap.forEach(doc => {
-        const data = doc.payload.doc.data() as object;
-        const id = doc.payload.doc.id;
-        this.estados.push({id:id, ...data });
+    this.fire
+      .getAll('pais')
+      .snapshotChanges()
+      .forEach((snap) => {
+        snap.forEach((doc) => {
+          const data = doc.payload.doc.data() as object;
+          const id = doc.payload.doc.id;
+          this.estados.push({ id: id, ...data });
+        });
       });
-    });
-    console.log(this.estados)
-    this.creatFormEstados(); 
+    console.log(this.estados);
+    this.creatFormEstados();
+  }
+
+  loadChange(event: any) {
+    console.log(event);
   }
 
   adicionarCidades(item: any) {
-    this.fire.getWhere('estados', 'estado', '==', item.nome).snapshotChanges().pipe(
-      map(change => 
-        change.map (c => 
-          ({id: c.payload.doc.id, ...c.payload.doc.data() as object})
-              )
-            )
-          ).subscribe(data =>{ 
-            this.cidades = data;
-            this.nameState = (item.nome);
-            this.modal.open();
-          });
-      console.log(this.cidades);
+    this.fire
+      .getWhere('estados', 'estado', '==', item.nome)
+      .snapshotChanges()
+      .pipe(
+        map((change) =>
+          change.map((c) => ({
+            id: c.payload.doc.id,
+            ...(c.payload.doc.data() as object),
+          }))
+        )
+      )
+      .subscribe((data) => {
+        this.cidades = data;
+        this.nameState = item.nome;
+        this.modal.open();
+      });
+    console.log(this.cidades);
   }
 
   creatFormEstados() {
@@ -102,7 +114,7 @@ export class CreateCityAndStateComponent implements OnInit {
     if (this.formEstados.invalid) {
       this.poNotify.error('Preencha os campos corretamente!');
     } else {
-      this.db.collection('pais').add({...this.formEstados.value});
+      this.db.collection('pais').add({ ...this.formEstados.value });
       this.poNotify.success('Estado Adicionado com sucesso!');
       setTimeout(() => {
         location.reload();
@@ -112,7 +124,7 @@ export class CreateCityAndStateComponent implements OnInit {
 
   deletarEstado(estado: any) {
     console.log(estado);
-    this.fire.deleteEstado(estado.id);          
+    this.fire.deleteEstado(estado.id);
     setTimeout(() => {
       this.poNotify.success('Estado Excluido com sucesso!');
       location.reload();
@@ -120,18 +132,19 @@ export class CreateCityAndStateComponent implements OnInit {
   }
 
   insertOneCity() {
-    console.log(  this.nameCity, this.nameState);
-    
+    console.log(this.nameCity, this.nameState);
+
     this.db.collection('estados').add({
       estado: this.nameState,
       nome: this.nameCity,
       descricao: this.descricaoCity,
+      foto: this.fotoCity,
     });
   }
 
   deletarCidade(cidade: any) {
     console.log(cidade.id);
-    this.fire.deleteCidade(cidade.id);          
+    this.fire.deleteCidade(cidade.id);
     this.poNotify.success('Cidade Excluido com sucesso!');
   }
 }

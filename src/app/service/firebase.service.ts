@@ -5,7 +5,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
   providedIn: 'root'
 })
 export class FirebaseService {
-  
+
   count: number = 1;
 
   constructor(private db: AngularFirestore) { }
@@ -17,7 +17,7 @@ export class FirebaseService {
   getWhere(collection: string, field: string, operator: any, value: any) {
     return this.db.collection(collection, ref => ref.where(field, operator, value));
   }
-  
+
   deleteEstado(data:any) {
     return this.db.collection("pais").doc(data).delete();
   }
@@ -37,6 +37,10 @@ export class FirebaseService {
       this.db.doc('anunciantes/'+ data.id).update(dataObject);
       this.count++;
     }
+  }
+
+  setOne(collection: string, data: any){
+    this.db.collection(collection).add(data)
   }
 
 }
